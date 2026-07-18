@@ -1,6 +1,6 @@
 # OpsBeacon AI: An Always-On AI DevOps Intelligence Agent
 
-[![CI Pipeline](https://github.com/opsbeacon-ai/opsbeacon-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/opsbeacon-ai/opsbeacon-ai/actions/workflows/ci.yml)
+[![CI Pipeline](https://github.com/Amitabh-DevOps/opsbeacon-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/Amitabh-DevOps/opsbeacon-ai/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![AWS Serverless](https://img.shields.io/badge/AWS-Serverless-orange.svg?style=flat&logo=amazon-aws)](https://aws.amazon.com/)
 [![Bedrock Nova](https://img.shields.io/badge/Amazon-Bedrock--Nova--Lite-cyan.svg)](https://aws.amazon.com/bedrock/)
@@ -19,7 +19,7 @@ The entire process is automated, serverless, and runs within the AWS Free Tier (
   * Kubernetes Blog
   * CNCF Blog
   * Docker Blog
-* **AI Analysis (Nova Lite)**: Filters duplicates and marketing copy, technical summaries, details operational engineering impacts, and states why updates matter.
+* **AI Analysis (Nova Lite)**: Filters duplicates and marketing copy, creates technical summaries, details operational engineering impacts, and states why updates matter.
 * **Brain Boost Learning**: Automatically generates:
   * A scenario-based DevOps interview question based on the updates.
   * A 30-minute hands-on practice challenge.
@@ -32,6 +32,8 @@ The entire process is automated, serverless, and runs within the AWS Free Tier (
 ## 📐 System Architecture
 
 The following diagram illustrates the serverless workflow of the agent:
+
+![OpsBeacon AI Systems Architecture Diagram](screenshots/architecture.png)
 
 ```mermaid
 graph TD
@@ -56,21 +58,18 @@ OpsBeacon-AI/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml             # GitHub Actions CI pipeline
-├── deploy/                    # Deployment scripts or local environment configs
 ├── docs/                      # Extensive markdown guides
-│   ├── assets/                # Diagram assets (Draw.io, SVG, PNG)
+│   ├── assets/                # Diagram assets (Draw.io, SVG)
 │   ├── architecture.md        # Architecture & sequence diagrams
-│   ├── builder-center-article.md # Challenge article (~1100 words)
+│   ├── builder-center-article.md # Challenge article (~1200 words)
 │   ├── COST.md                # Cost breakdown ($0.0126/month)
-│   ├── demo-script.md         # 2-minute video presentation guide
 │   ├── DEPLOYMENT.md          # Guide for Bedrock access, SES setup & SAM CLI
 │   ├── LOCAL_SETUP.md         # Virtual env and local testing guide
 │   ├── ROADMAP.md             # Future product roadmap
 │   ├── SUBMISSION_CHECKLIST.md # Submission verification checklist
 │   └── TROUBLESHOOTING.md     # Error codes and resolution protocols
-├── screenshots/               # Folder for demo images
-├── scripts/                   # Local automation run scripts
-├── src/                       # Application code
+├── screenshots/               # Folder for demo and console screenshots
+├── src/                       # Application source code
 │   ├── __init__.py
 │   ├── app.py                 # Lambda handler orchestrator
 │   ├── bedrock_client.py      # Bedrock converse client (Nova Lite)
@@ -112,7 +111,7 @@ Ensure you have the [AWS CLI](https://aws.amazon.com/cli/) and [AWS SAM CLI](htt
 ### 3. Deploy using AWS SAM
 Run the following commands in the workspace directory:
 ```bash
-sam build
+sam build --use-container
 sam deploy --guided
 ```
 Provide the verified sender and recipient emails when prompted.
@@ -134,25 +133,19 @@ source venv/bin/activate  # Windows: .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 
 # Run pytest unit tests
-pytest -v
+python -m pytest -v
 ```
 Refer to the [Local Setup Guide](docs/LOCAL_SETUP.md) for more details.
 
 ---
 
-## 📊 cost & Free Tier
+## 📊 Cost & Free Tier
 
 OpsBeacon AI operates **entirely within the AWS Free Tier** for Lambda, EventBridge, CloudWatch, and SES.
 * The only non-free service is Amazon Bedrock Nova Lite, which costs **~$0.00042 per daily run**.
 * The total estimated monthly running cost is **$0.013 USD** (approximately **one cent**).
 
 See the [Cost Guide](docs/COST.md) for the exact breakdown.
-
----
-
-## 🎥 Recording the Demo
-
-We have prepared a step-by-step recording guide for your AWS submission video. It covers setting up your AWS Console, triggering a mock execution, and checking your inbox. See the [Demo Script](docs/demo-script.md) for the complete 2-minute outline.
 
 ---
 

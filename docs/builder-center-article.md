@@ -37,9 +37,7 @@ An engineer faces two primary issues when consuming these raw feeds:
 
 The user journey is designed around a "set-and-forget" philosophy, requiring zero human intervention after deployment:
 
-```
-[Deploy once via SAM] ──> [EventBridge Triggers Daily] ──> [Bedrock Processes Data] ──> [SES Delivers HTML to Inbox]
-```
+![user journey](../screenshots/12.png)
 
 1. **Deploy**: The engineer deploys the serverless stack using the AWS SAM CLI, configuring their verified email addresses as parameters.
 2. **Execute**: Every morning at 8:00 AM UTC, the agent executes silently. It ingests feeds, filters for updates from the last 24 hours, queries Bedrock for synthesis, and compiles the briefing.
