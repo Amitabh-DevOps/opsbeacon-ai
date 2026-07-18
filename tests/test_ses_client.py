@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 from botocore.exceptions import ClientError  # type: ignore
 from src.ses_client import SESClient
 
+
 class TestSESClient(unittest.TestCase):
     @patch("boto3.client")
     def test_send_email_success(self, mock_boto):
@@ -16,7 +17,7 @@ class TestSESClient(unittest.TestCase):
             sender="sender@example.com",
             recipient="recipient@example.com",
             subject="Test Subject",
-            html_body="<h1>Hello</h1>"
+            html_body="<h1>Hello</h1>",
         )
 
         self.assertTrue(success)
@@ -28,8 +29,13 @@ class TestSESClient(unittest.TestCase):
         mock_ses = MagicMock()
         mock_boto.return_value = mock_ses
         mock_ses.send_email.side_effect = ClientError(
-            {"Error": {"Code": "MessageRejected", "Message": "Email address is not verified"}},
-            "SendEmail"
+            {
+                "Error": {
+                    "Code": "MessageRejected",
+                    "Message": "Email address is not verified",
+                }
+            },
+            "SendEmail",
         )
 
         client = SESClient()
@@ -37,7 +43,7 @@ class TestSESClient(unittest.TestCase):
             sender="sender@example.com",
             recipient="recipient@example.com",
             subject="Test Subject",
-            html_body="<h1>Hello</h1>"
+            html_body="<h1>Hello</h1>",
         )
 
         self.assertFalse(success)
@@ -54,7 +60,7 @@ class TestSESClient(unittest.TestCase):
             sender="sender@example.com",
             recipient="recipient@example.com",
             subject="Test Subject",
-            html_body="<h1>Hello</h1>"
+            html_body="<h1>Hello</h1>",
         )
 
         self.assertFalse(success)

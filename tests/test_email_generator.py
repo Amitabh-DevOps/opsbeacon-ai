@@ -1,6 +1,7 @@
 import unittest
 from src.email_generator import generate_email_html, get_badge_class
 
+
 class TestEmailGenerator(unittest.TestCase):
     def test_get_badge_class(self):
         """Test source name mapping to CSS class names."""
@@ -20,18 +21,18 @@ class TestEmailGenerator(unittest.TestCase):
                     "url": "https://aws.amazon.com/whats-new/bedrock-nova",
                     "summary": "Nova Lite is ready to use.",
                     "why_it_matters": "Extremely cost efficient.",
-                    "devops_impact": "Lower bills for summarizers."
+                    "devops_impact": "Lower bills for summarizers.",
                 }
             ],
             "learning": {
                 "interview_question": "Explain Bedrock Nova Lite architecture.",
                 "hands_on_challenge": "Deploy a Lambda function calling Bedrock.",
-                "recommendation": "Read AWS Nova Lite specs."
-            }
+                "recommendation": "Read AWS Nova Lite specs.",
+            },
         }
 
         html = generate_email_html(mock_digest)
-        
+
         self.assertIsNotNone(html)
         self.assertIn("<!DOCTYPE html>", html)
         self.assertIn("Amazon Bedrock Nova Lite Release", html)
@@ -47,8 +48,8 @@ class TestEmailGenerator(unittest.TestCase):
             "learning": {
                 "interview_question": "Explain general CI/CD practices.",
                 "hands_on_challenge": "Build a pipeline.",
-                "recommendation": "Read CI/CD handbook."
-            }
+                "recommendation": "Read CI/CD handbook.",
+            },
         }
 
         html = generate_email_html(mock_digest)

@@ -266,6 +266,7 @@ EMAIL_HTML_TEMPLATE = """
 </html>
 """
 
+
 def get_badge_class(source: str) -> str:
     """
     Returns CSS badge styling class depending on the feed source name.
@@ -281,31 +282,32 @@ def get_badge_class(source: str) -> str:
         return "badge-docker"
     return "badge-generic"
 
+
 def generate_email_html(digest: dict[str, Any]) -> str:
     """
     Compiles Bedrock intelligence digest into a beautiful responsive HTML email string.
-    
+
     Args:
         digest: The parsed dictionary containing 'updates' (list) and 'learning' (dict).
-        
+
     Returns:
         The generated HTML content string.
     """
     logger.info("Generating HTML email from digest data")
-    
+
     # Standardize time presentation
     now_utc_str = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M")
-    
+
     template = Template(EMAIL_HTML_TEMPLATE)
-    
+
     # Inject badge helper into context
     html_content = template.render(
         date=now_utc_str,
         updates=digest.get("updates", []),
         updates_count=len(digest.get("updates", [])),
         learning=digest.get("learning", {}),
-        get_badge_class=get_badge_class
+        get_badge_class=get_badge_class,
     )
-    
+
     logger.info("HTML email compilation complete")
     return html_content

@@ -7,14 +7,18 @@ from src.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 class BedrockClient:
     """
     Wrapper client for Amazon Bedrock using Nova Lite to summarize updates and generate learning materials.
     """
-    def __init__(self, model_id: str = "amazon.nova-lite-v1:0", region_name: str = "us-east-1"):
+
+    def __init__(
+        self, model_id: str = "amazon.nova-lite-v1:0", region_name: str = "us-east-1"
+    ):
         """
         Initializes the BedrockClient.
-        
+
         Args:
             model_id: The Amazon Bedrock Model ID to invoke.
             region_name: The AWS region where Bedrock is configured.
@@ -25,44 +29,59 @@ class BedrockClient:
     def generate_digest(self, feed_items: list[dict[str, Any]]) -> dict[str, Any]:
         """
         Invokes Amazon Bedrock to process feed items, filter duplicates, and create a DevOps summary digest.
-        
+
         Args:
             feed_items: A list of dict entries representing scraped RSS articles.
-            
+
         Returns:
             A parsed dictionary with keys: 'updates' (list) and 'learning' (dict).
         """
-        logger.info("Preparing Bedrock prompt", extra={"extra_fields": {"items_count": len(feed_items), "model_id": self.model_id}})
-        
+        logger.info(
+            "Preparing Bedrock prompt",
+            extra={
+                "extra_fields": {
+                    "items_count": len(feed_items),
+                    "model_id": self.model_id,
+                }
+            },
+        )
+
         prompt = self._build_prompt(feed_items)
-        
+
         try:
             logger.info("Invoking Bedrock Converse API")
             response = self.client.converse(
                 modelId=self.model_id,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [{"text": prompt}]
-                    }
-                ],
+                messages=[{"role": "user", "content": [{"text": prompt}]}],
                 inferenceConfig={
                     "maxTokens": 3000,
                     "temperature": 0.2,
                     "topP": 0.9,
-                }
+                },
             )
-            
+
             response_text = response["output"]["message"]["content"][0]["text"]
             logger.info("Bedrock API call successful, parsing response")
             return self._parse_json_response(response_text)
 
         except ClientError as exc:
-            logger.error("Bedrock ClientError during invocation", exc_info=True, extra={"extra_fields": {"error": str(exc)}})
-            return self._get_fallback_digest(f"AWS Bedrock Service Error occurred while generating the digest: {str(exc)}")
+            logger.error(
+                "Bedrock ClientError during invocation",
+                exc_info=True,
+                extra={"extra_fields": {"error": str(exc)}},
+            )
+            return self._get_fallback_digest(
+                f"AWS Bedrock Service Error occurred while generating the digest: {str(exc)}"
+            )
         except Exception as exc:
-            logger.error("Unexpected error during Bedrock invocation", exc_info=True, extra={"extra_fields": {"error": str(exc)}})
-            return self._get_fallback_digest(f"An unexpected system error occurred while generating the digest: {str(exc)}")
+            logger.error(
+                "Unexpected error during Bedrock invocation",
+                exc_info=True,
+                extra={"extra_fields": {"error": str(exc)}},
+            )
+            return self._get_fallback_digest(
+                f"An unexpected system error occurred while generating the digest: {str(exc)}"
+            )
 
     def _build_prompt(self, feed_items: list[dict[str, Any]]) -> str:
         """
@@ -87,7 +106,7 @@ class BedrockClient:
   }
 }
 """
-        
+
         if not feed_items:
             return f"""You are OpsBeacon, an expert DevOps AI intelligence assistant.
 No recent cloud or DevOps updates were published in the last 24 hours.
@@ -106,7 +125,7 @@ Response Requirements:
 """
 
         raw_items_str = json.dumps(feed_items, indent=2)
-        
+
         return f"""You are OpsBeacon, an expert DevOps AI intelligence assistant.
 Your task is to analyze, filter, and summarize the following cloud/DevOps updates.
 
@@ -136,10 +155,10 @@ Response Requirements:
         # Look for markdown JSON block first
         match = re.search(r"```json\s*(.*?)\s*```", text, re.DOTALL | re.IGNORECASE)
         json_str = match.group(1) if match else text
-        
+
         try:
             parsed = json.loads(json_str.strip())
-            
+
             # Simple schema validation
             if not isinstance(parsed, dict):
                 raise ValueError("Parsed output is not a JSON object")
@@ -149,14 +168,18 @@ Response Requirements:
                 parsed["learning"] = {
                     "interview_question": "What is the best practice for managing secrets in Lambda?",
                     "hands_on_challenge": "Write a SAM template that injects secure parameters from Parameter Store.",
-                    "recommendation": "Read the AWS Systems Manager Security best practices."
+                    "recommendation": "Read the AWS Systems Manager Security best practices.",
                 }
             return parsed
-            
+
         except (json.JSONDecodeError, ValueError) as exc:
-            logger.error("Failed to parse Bedrock JSON output, using raw text fallback", 
-                         extra={"extra_fields": {"error": str(exc), "raw_text": text}})
-            return self._get_fallback_digest(f"Failed to parse AI response. Raw output summary:\n\n{text[:1500]}")
+            logger.error(
+                "Failed to parse Bedrock JSON output, using raw text fallback",
+                extra={"extra_fields": {"error": str(exc), "raw_text": text}},
+            )
+            return self._get_fallback_digest(
+                f"Failed to parse AI response. Raw output summary:\n\n{text[:1500]}"
+            )
 
     def _get_fallback_digest(self, error_message: str) -> dict[str, Any]:
         """
@@ -170,12 +193,12 @@ Response Requirements:
                     "url": "https://github.com/opsbeacon-ai",
                     "summary": f"OpsBeacon AI executed successfully but encountered an issue compiling feed details: {error_message}",
                     "why_it_matters": "Ensures the system still sends daily heartbeat emails even when processing errors occur.",
-                    "devops_impact": "None. Operational workflows are unaffected."
+                    "devops_impact": "None. Operational workflows are unaffected.",
                 }
             ],
             "learning": {
                 "interview_question": "How do you build a resilient notification system in AWS when downstream dependencies fail?",
                 "hands_on_challenge": "Create an Amazon SES failure-handling architecture using Dead Letter Queues (DLQ).",
-                "recommendation": "Examine the AWS Serverless Application Lens documentation for reliability patterns."
-            }
+                "recommendation": "Examine the AWS Serverless Application Lens documentation for reliability patterns.",
+            },
         }
