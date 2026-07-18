@@ -35,18 +35,6 @@ The following diagram illustrates the serverless workflow of the agent:
 
 ![OpsBeacon AI Systems Architecture Diagram](screenshots/architecture.png)
 
-```mermaid
-graph TD
-    A[EventBridge Scheduler] -->|cron 0 8 * * ? *| B[AWS Lambda Function]
-    B -->|Fetch RSS XML| C[RSS Feeds]
-    C -->|Parse last 24h updates| B
-    B -->|Prompt with JSON Schema| D[Amazon Bedrock Nova Lite]
-    D -->|Return structured JSON| B
-    B -->|Compile HTML Template| E[Jinja2 Renderer]
-    B -->|Dispatch HTML Email| F[Amazon SES]
-    F -->|Deliver briefing| G[DevOps Engineer Inbox]
-```
-
 For sequence diagrams and Draw.io assets, see [Architecture Documentation](docs/architecture.md).
 
 ---
