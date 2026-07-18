@@ -35,7 +35,7 @@ Resources:
       FunctionName: OpsBeaconAI-Engine
       Description: Core engine that aggregates RSS feeds, calls Bedrock Nova Lite, and sends SES alerts.
       Handler: src.app.lambda_handler
-      Runtime: python3.12
+      Runtime: python3.13
       CodeUri: .
       Timeout: 300
       MemorySize: 256
