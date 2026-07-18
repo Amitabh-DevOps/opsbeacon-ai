@@ -66,8 +66,6 @@ Resources:
                 - logs:CreateLogStream
                 - logs:PutLogEvents
               Resource: 'arn:aws:logs:*:*:*'
-    Metadata:
-      BuildMethod: python
 
   OpsBeaconScheduleToLambdaRole:
     Type: AWS::IAM::Role
