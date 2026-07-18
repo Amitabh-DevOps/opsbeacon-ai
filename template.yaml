@@ -41,7 +41,6 @@ Resources:
       MemorySize: 256
       Environment:
         Variables:
-          AWS_REGION: !Ref AWS::Region
           BEDROCK_MODEL_ID: !Ref BedrockModelId
           SENDER_EMAIL: !Ref SenderEmail
           RECIPIENT_EMAIL: !Ref RecipientEmail
