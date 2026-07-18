@@ -1,0 +1,31 @@
+# More information about the configuration file can be found here:
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
+version = 0.1
+
+[default]
+[default.global.parameters]
+stack_name = "opsbeacon-ai"
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.validate.parameters]
+strict = true
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+stack_name = "opsbeacon-ai"
+region = "us-east-1"
+parameter_overrides = "BedrockModelId=\"amazon.nova-lite-v1:0\" SenderEmail=\"sender@example.com\" RecipientEmail=\"recipient@example.com\" RssLimit=\"5\""
+image_repositories = []
+
+[default.package.parameters]
+
+[default.sync.parameters]
+
+[default.local_start_api.parameters]
+
+[default.local_start_lambda.parameters]

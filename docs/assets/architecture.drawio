@@ -1,0 +1,43 @@
+<mxfile host="Electron" modified="2026-07-18T12:00:00.000Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.6.0 Safari/537.36" version="21.6.8" type="device">
+  <diagram id="OpsBeaconAIDiagram" name="Page-1">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="EventBridge Scheduler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f59e0b;strokeColor=#d97706;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="AWS Lambda (OpsBeacon Engine)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#8b5cf6;strokeColor=#4f46e5;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="240" y="200" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="RSS Feeds (AWS, Kubernetes, CNCF, Docker)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e293b;strokeColor=#334155;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="240" y="60" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="Amazon Bedrock (Nova Lite)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#06b6d4;strokeColor=#0891b2;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="480" y="140" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="Amazon SES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3b82f6;strokeColor=#1d4ed8;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="480" y="260" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="DevOps Engineer Inbox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#10b981;strokeColor=#047857;fontColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="700" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="6" target="7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

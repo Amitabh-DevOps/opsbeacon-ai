@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2012-10-17'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  OpsBeacon AI - Always-On DevOps Intelligence Agent.
+  Deploys a Python Lambda function triggered daily by EventBridge Scheduler to scrape RSS feeds,
+  synthesize updates using Amazon Bedrock, and dispatch HTML summaries via Amazon SES.
+
+Parameters:
+  BedrockModelId:
+    Type: String
+    Default: amazon.nova-lite-v1:0
+    Description: Amazon Bedrock Model ID to invoke for summarizing updates (e.g. amazon.nova-lite-v1:0).
+  
+  SenderEmail:
+    Type: String
+    Description: Verified Amazon SES email address that sends the daily briefing.
+    AllowedPattern: '^[^@]+@[^@]+\.[^@]+$'
+    ConstraintDescription: Must be a valid email address.
+
+  RecipientEmail:
+    Type: String
+    Description: Verified Amazon SES email address that receives the daily briefing.
+    AllowedPattern: '^[^@]+@[^@]+\.[^@]+$'
+    ConstraintDescription: Must be a valid email address.
+
+  RssLimit:
+    Type: Number
+    Default: 5
+    Description: Maximum articles to fetch per feed per execution to prevent prompt token bloat.
+
+Resources:
+  OpsBeaconLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: OpsBeaconAI-Engine
+      Description: Core engine that aggregates RSS feeds, calls Bedrock Nova Lite, and sends SES alerts.
+      Handler: src.app.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Timeout: 300
+      MemorySize: 256
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          SENDER_EMAIL: !Ref SenderEmail
+          RECIPIENT_EMAIL: !Ref RecipientEmail
+          RSS_LIMIT: !Ref RssLimit
+      Policies:
+        # Least privilege IAM policies for Bedrock, SES, and CloudWatch logging
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/${BedrockModelId}'
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource:
+                - !Sub 'arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${SenderEmail}'
+                - !Sub 'arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${RecipientEmail}'
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: 'arn:aws:logs:*:*:*'
+      Metadata:
+        BuildMethod: python
+
+  OpsBeaconScheduleToLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeLambdaFunction
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt OpsBeaconLambdaFunction.Arn
+
+  OpsBeaconDailySchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: OpsBeaconAI-DailyBriefingTrigger
+      Description: Triggers OpsBeacon AI Lambda function daily at 8:00 AM UTC.
+      ScheduleExpression: 'cron(0 8 * * ? *)'
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      State: ENABLED
+      Target:
+        Arn: !GetAtt OpsBeaconLambdaFunction.Arn
+        RoleArn: !GetAtt OpsBeaconScheduleToLambdaRole.Arn
+
+Outputs:
+  LambdaFunctionArn:
+    Description: "OpsBeacon AI Lambda Function ARN"
+    Value: !GetAtt OpsBeaconLambdaFunction.Arn
+  
+  LambdaFunctionRole:
+    Description: "IAM Role created for OpsBeacon AI Lambda function"
+    Value: !GetAtt OpsBeaconLambdaFunctionRole.Arn
+
+  EventBridgeScheduleArn:
+    Description: "EventBridge Scheduler Rule ARN"
+    Value: !GetAtt OpsBeaconDailySchedule.Arn

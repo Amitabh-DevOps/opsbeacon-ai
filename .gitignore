@@ -1,0 +1,27 @@
+# AWS SAM build directory
+.aws-sam/
+
+# Python virtual environment and cache
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# Local configuration and secrets
+.env
+.env.local
+*.pem
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
