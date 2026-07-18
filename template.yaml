@@ -108,5 +108,5 @@ Outputs:
     Value: !GetAtt OpsBeaconLambdaFunctionRole.Arn
 
   EventBridgeScheduleArn:
-    Description: "EventBridge Scheduler Rule ARN"
+    Description: "EventBridge Scheduler ARN"
     Value: !GetAtt OpsBeaconDailySchedule.Arn
