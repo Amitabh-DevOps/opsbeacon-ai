@@ -99,6 +99,7 @@ During development, I encountered and resolved three major challenges:
 1. **LLM Output Structuring**: LLMs can return conversational preambles (e.g. *"Here is your JSON response..."*). To solve this, I designed a strict prompt instruction requesting Bedrock to format outputs inside a markdown ```json ``` code block, combined with a robust regex extractor in `src/bedrock_client.py` that falls back to raw text.
 2. **RSS Date Standardization**: Feeds represent dates in varying formats (RFC 822 vs. ISO 8601). I wrote a parser that attempts to use feedparser's normalized `published_parsed` tuple, falling back to manual datetime parsing if the tuple is missing.
 3. **SES Sandbox Constraints**: SES accounts default to a sandbox where emails can only be sent to verified addresses. The implementation includes detailed warning logs explaining SES Sandbox limits and how to verify email addresses.
+4. **Host Python Version Mismatches**: On bleeding-edge host OS environments (like Ubuntu 26.04 running Python 3.14 natively), the local Python builder fails validation against Lambda's target runtime (`python3.12`). I resolved this by configuring Docker on the deployment station and utilizing SAM's containerized builder (`sam build --use-container`), which compiles all dependencies inside a matching Amazon Linux runtime container.
 
 <!-- IMAGE_PLACEHOLDER: SES Verified Identity -->
 *Note: Capture a screenshot showing verified SES identities in the console.*
@@ -125,7 +126,7 @@ Future plans for OpsBeacon AI include:
 ## 11. GitHub Repository
 
 The source code for OpsBeacon AI is fully open-source and available on GitHub:
-* **Repository Link**: [https://github.com/opsbeacon-ai/opsbeacon-ai](https://github.com/opsbeacon-ai/opsbeacon-ai)
+* **Repository Link**: [https://github.com/Amitabh-DevOps/opsbeacon-ai](https://github.com/Amitabh-DevOps/opsbeacon-ai)
 
 The repository contains requirements, the SAM template, GitHub CI/CD configurations, unit tests, and comprehensive guides.
 
