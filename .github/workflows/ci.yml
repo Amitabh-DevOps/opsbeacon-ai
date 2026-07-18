@@ -33,4 +33,4 @@ jobs:
         run: ruff check src tests
 
       - name: Run Unit Tests (Pytest)
-        run: pytest -v
+        run: python -m pytest -v
