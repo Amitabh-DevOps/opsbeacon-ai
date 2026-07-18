@@ -106,6 +106,11 @@ SAM automatically provisions execution roles. The Lambda execution policy restri
 
 ![IAM Role](../screenshots/9.png)
 
+### G. Amazon S3
+Hosts the compiled deployment artifacts (packaged Lambda code ZIP files and CloudFormation templates) uploaded by the AWS SAM CLI during the deployment phase.
+
+![Amazon S3 Bucket for Deployment Artifacts](../screenshots/10.png)
+
 ---
 
 ## 7. Architecture Overview
